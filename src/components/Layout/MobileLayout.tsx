@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingCart, User, Package, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,13 @@ interface MobileLayoutProps {
 
 export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
   const [cartItemCount, setCartItemCount] = React.useState(0);
-  const [activeTab, setActiveTab] = React.useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const getActiveTab = () => {
+    if (location.pathname === '/cart') return 'cart';
+    return 'home';
+  };
 
   React.useEffect(() => {
     const unsubscribe = cartService.subscribe((cart) => {
@@ -23,11 +29,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
   }, []);
 
   const navigationItems = [
-    { id: 'home', icon: Home, label: 'Trang chủ', labelEn: 'Home' },
-    { id: 'search', icon: Search, label: 'Tìm kiếm', labelEn: 'Search' },
-    { id: 'cart', icon: ShoppingCart, label: 'Giỏ hàng', labelEn: 'Cart', badge: cartItemCount },
-    { id: 'orders', icon: Package, label: 'Đơn hàng', labelEn: 'Orders' },
-    { id: 'profile', icon: User, label: 'Tài khoản', labelEn: 'Profile' },
+    { id: 'home', icon: Home, label: 'Trang chủ', labelEn: 'Home', path: '/' },
+    { id: 'search', icon: Search, label: 'Tìm kiếm', labelEn: 'Search', path: '/' },
+    { id: 'cart', icon: ShoppingCart, label: 'Giỏ hàng', labelEn: 'Cart', badge: cartItemCount, path: '/cart' },
+    { id: 'orders', icon: Package, label: 'Đơn hàng', labelEn: 'Orders', path: '/' },
+    { id: 'profile', icon: User, label: 'Tài khoản', labelEn: 'Profile', path: '/' },
   ];
 
   return (
@@ -60,12 +66,12 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
         <div className="flex items-center justify-around">
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const isActive = getActiveTab() === item.id;
             
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => navigate(item.path)}
                 className={cn(
                   "flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-colors",
                   isActive 
