@@ -1,5 +1,6 @@
 import React from 'react';
 import { ProductCard } from '@/components/ProductCard';
+import { ProductDetailModal } from '@/components/ProductDetailModal';
 import { SearchBar } from '@/components/SearchBar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,8 @@ export const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [products, setProducts] = React.useState<Product[]>([]);
   const [featuredProducts, setFeaturedProducts] = React.useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 
   const productService = new ProductService();
@@ -88,6 +91,11 @@ export const HomePage: React.FC = () => {
     } catch (error) {
       console.error('Error loading category products:', error);
     }
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDetailModalOpen(true);
   };
 
   if (loading) {
@@ -168,10 +176,7 @@ export const HomePage: React.FC = () => {
               <ProductCard
                 key={product.id}
                 product={product}
-                onProductClick={(product) => {
-                  // Navigate to product detail
-                  console.log('Navigate to product:', product.id);
-                }}
+                onProductClick={handleProductClick}
               />
             ))}
           </div>
@@ -192,9 +197,7 @@ export const HomePage: React.FC = () => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onProductClick={(product) => {
-                    console.log('Navigate to product:', product.id);
-                  }}
+                  onProductClick={handleProductClick}
                 />
               ))}
             </div>
@@ -232,6 +235,16 @@ export const HomePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        product={selectedProduct}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedProduct(null);
+        }}
+      />
     </div>
   );
 };

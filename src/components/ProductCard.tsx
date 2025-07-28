@@ -27,6 +27,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    if (product.requiresPrescription) {
+      // For prescription products, user must use product detail modal
+      onProductClick?.(product);
+      return;
+    }
+    
     cartService.addToCart(product, 1);
     toast({
       title: "Đã thêm vào giỏ hàng",
@@ -87,11 +94,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {product.inStock && (
               <Button
                 size="sm"
-                variant="gradient"
+                variant={product.requiresPrescription ? "outline" : "gradient"}
                 className="h-8 w-8 p-0"
                 onClick={handleAddToCart}
               >
-                <Plus className="h-4 w-4" />
+                {product.requiresPrescription ? (
+                  <Pill className="h-4 w-4" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
               </Button>
             )}
           </div>
