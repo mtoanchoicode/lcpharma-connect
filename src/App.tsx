@@ -7,15 +7,11 @@ import { MobileLayout } from "@/components/Layout/MobileLayout";
 import { HomePage } from "./pages/HomePage";
 import { CartPage } from "./pages/CartPage";
 import NotFound from "./pages/NotFound";
-import { notificationService } from "@/services/NotificationService";
 import React from "react";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  React.useEffect(() => {
-    notificationService.initialize();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
