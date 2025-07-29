@@ -1,29 +1,15 @@
 import { Product, BranchAvailability } from '../models/Product';
-import { ProductRepository } from '../repositories/ProductRepository';
+import { SupabaseProductRepository } from '../repositories/SupabaseProductRepository';
 
 export class ProductService {
-  private productRepository: ProductRepository;
+  private productRepository: SupabaseProductRepository;
 
   constructor() {
-    this.productRepository = new ProductRepository();
+    this.productRepository = new SupabaseProductRepository();
   }
 
   async searchProducts(query: string): Promise<Product[]> {
-    const allProducts = await this.productRepository.getAllProducts();
-    
-    if (!query.trim()) {
-      return allProducts;
-    }
-
-    const searchTerm = query.toLowerCase();
-    return allProducts.filter(product => 
-      product.name.toLowerCase().includes(searchTerm) ||
-      product.nameVi.toLowerCase().includes(searchTerm) ||
-      product.category.toLowerCase().includes(searchTerm) ||
-      product.categoryVi.toLowerCase().includes(searchTerm) ||
-      product.description.toLowerCase().includes(searchTerm) ||
-      product.descriptionVi.toLowerCase().includes(searchTerm)
-    );
+    return await this.productRepository.searchProducts(query);
   }
 
   async getProductById(id: string): Promise<Product | null> {
@@ -40,10 +26,6 @@ export class ProductService {
   }
 
   async checkAvailability(productId: string, branchId: string): Promise<number> {
-    const product = await this.productRepository.getProductById(productId);
-    if (!product) return 0;
-
-    const branch = product.branchAvailability.find(b => b.branchId === branchId);
-    return branch ? branch.quantity : 0;
+    return await this.productRepository.checkAvailability(productId, branchId);
   }
 }

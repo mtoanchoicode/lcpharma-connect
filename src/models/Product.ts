@@ -1,16 +1,29 @@
 export interface Product {
   id: string;
   name: string;
-  nameVi: string;
+  name_vi: string;
   description: string;
-  descriptionVi: string;
+  description_vi: string;
   price: number;
   image: string;
   category: string;
-  categoryVi: string;
-  inStock: boolean;
-  branchAvailability: BranchAvailability[];
-  requiresPrescription: boolean;
+  category_vi: string;
+  in_stock: boolean;
+  requires_prescription: boolean;
+  branchAvailability?: BranchAvailability[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Branch {
+  id: string;
+  name: string;
+  name_vi: string;
+  address: string;
+  address_vi: string;
+  phone: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface BranchAvailability {
@@ -23,6 +36,15 @@ export interface BranchAvailability {
   phone: string;
 }
 
+export interface ProductBranchAvailability {
+  id: string;
+  product_id: string;
+  branch_id: string;
+  quantity: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -30,13 +52,29 @@ export interface CartItem {
 
 export interface Order {
   id: string;
-  items: CartItem[];
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  customer_address: string;
   total: number;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed';
-  statusVi: string;
-  createdAt: Date;
-  customerInfo: CustomerInfo;
+  status_vi: string;
+  created_at?: string;
+  updated_at?: string;
+  items?: OrderItem[];
   prescriptionImages?: string[];
+}
+
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  product_name_vi: string;
+  product_price: number;
+  quantity: number;
+  subtotal: number;
+  created_at?: string;
 }
 
 export interface CustomerInfo {
@@ -48,7 +86,7 @@ export interface CustomerInfo {
 
 export interface PrescriptionUpload {
   id: string;
-  orderId: string;
-  imageUrl: string;
-  uploadedAt: Date;
+  order_id: string;
+  image_url: string;
+  uploaded_at?: string;
 }
