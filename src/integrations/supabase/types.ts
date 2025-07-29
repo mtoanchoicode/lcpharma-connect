@@ -14,7 +14,248 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      branches: {
+        Row: {
+          address: string
+          address_vi: string
+          created_at: string | null
+          id: string
+          name: string
+          name_vi: string
+          phone: string
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          address_vi: string
+          created_at?: string | null
+          id: string
+          name: string
+          name_vi: string
+          phone: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          address_vi?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          name_vi?: string
+          phone?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          order_id: string | null
+          product_id: string | null
+          product_name: string
+          product_name_vi: string
+          product_price: number
+          quantity: number
+          subtotal: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          product_name: string
+          product_name_vi: string
+          product_price: number
+          quantity: number
+          subtotal: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          product_id?: string | null
+          product_name?: string
+          product_name_vi?: string
+          product_price?: number
+          quantity?: number
+          subtotal?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          customer_address: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          status: string
+          status_vi: string
+          total: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_address: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          status?: string
+          status_vi?: string
+          total: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_address?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          status?: string
+          status_vi?: string
+          total?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      prescriptions: {
+        Row: {
+          id: string
+          image_url: string
+          order_id: string | null
+          uploaded_at: string | null
+        }
+        Insert: {
+          id?: string
+          image_url: string
+          order_id?: string | null
+          uploaded_at?: string | null
+        }
+        Update: {
+          id?: string
+          image_url?: string
+          order_id?: string | null
+          uploaded_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prescriptions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_branch_availability: {
+        Row: {
+          branch_id: string | null
+          created_at: string | null
+          id: string
+          product_id: string | null
+          quantity: number
+          updated_at: string | null
+        }
+        Insert: {
+          branch_id?: string | null
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          updated_at?: string | null
+        }
+        Update: {
+          branch_id?: string | null
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_branch_availability_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_branch_availability_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          category_vi: string
+          created_at: string | null
+          description: string
+          description_vi: string
+          id: string
+          image: string
+          in_stock: boolean | null
+          name: string
+          name_vi: string
+          price: number
+          requires_prescription: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          category_vi: string
+          created_at?: string | null
+          description: string
+          description_vi: string
+          id: string
+          image: string
+          in_stock?: boolean | null
+          name: string
+          name_vi: string
+          price: number
+          requires_prescription?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          category_vi?: string
+          created_at?: string | null
+          description?: string
+          description_vi?: string
+          id?: string
+          image?: string
+          in_stock?: boolean | null
+          name?: string
+          name_vi?: string
+          price?: number
+          requires_prescription?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
