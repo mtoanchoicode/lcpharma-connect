@@ -17,6 +17,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
   
   const getActiveTab = () => {
     if (location.pathname === '/cart') return 'cart';
+    if (location.pathname === '/orders') return 'orders';
     return 'home';
   };
 
@@ -32,7 +33,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     { id: 'home', icon: Home, label: 'Trang chủ', labelEn: 'Home', path: '/' },
     { id: 'search', icon: Search, label: 'Tìm kiếm', labelEn: 'Search', path: '/' },
     { id: 'cart', icon: ShoppingCart, label: 'Giỏ hàng', labelEn: 'Cart', badge: cartItemCount, path: '/cart' },
-    { id: 'orders', icon: Package, label: 'Đơn hàng', labelEn: 'Orders', path: '/' },
+    { id: 'orders', icon: Package, label: 'Đơn hàng', labelEn: 'Orders', path: '/orders' },
     { id: 'profile', icon: User, label: 'Tài khoản', labelEn: 'Profile', path: '/' },
   ];
 

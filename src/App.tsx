@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MobileLayout } from "@/components/Layout/MobileLayout";
 import { HomePage } from "./pages/HomePage";
 import { CartPage } from "./pages/CartPage";
+import { OrdersPage } from "./pages/OrdersPage";
 import NotFound from "./pages/NotFound";
 import React from "react";
 
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/" element={<MobileLayout />}>
               <Route index element={<HomePage />} />
               <Route path="cart" element={<CartPage />} />
+              <Route path="orders" element={<OrdersPage />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
