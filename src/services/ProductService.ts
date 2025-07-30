@@ -25,6 +25,10 @@ export class ProductService {
     return allProducts.slice(0, 6); // Return first 6 products as featured
   }
 
+  async getAllProducts(): Promise<Product[]> {
+    return await this.productRepository.getAllProducts();
+  }
+
   async checkAvailability(productId: string, branchId: string): Promise<number> {
     return await this.productRepository.checkAvailability(productId, branchId);
   }

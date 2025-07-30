@@ -16,6 +16,8 @@ export const HomePage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+  const [showAllProducts, setShowAllProducts] = React.useState(false);
 
   const productService = new ProductService();
 
@@ -31,7 +33,9 @@ export const HomePage: React.FC = () => {
     try {
       const featured = await productService.getFeaturedProducts();
       setFeaturedProducts(featured);
-      setProducts(featured);
+      if (!searchQuery && !selectedCategory && !showAllProducts) {
+        setProducts(featured);
+      }
     } catch (error) {
       console.error('Error loading products:', error);
     } finally {
@@ -40,9 +44,22 @@ export const HomePage: React.FC = () => {
   };
 
   const searchProducts = async () => {
+    if (!searchQuery.trim()) {
+      if (selectedCategory) {
+        handleCategoryClick(selectedCategory);
+      } else if (showAllProducts) {
+        handleViewAll();
+      } else {
+        setProducts(featuredProducts);
+      }
+      return;
+    }
+
     try {
       const results = await productService.searchProducts(searchQuery);
       setProducts(results);
+      setSelectedCategory(null);
+      setShowAllProducts(false);
     } catch (error) {
       console.error('Error searching products:', error);
     }
@@ -66,9 +83,9 @@ export const HomePage: React.FC = () => {
       count: 8
     },
     { 
-      id: 'heart-health', 
+      id: 'cardiovascular', 
       name: 'Tim mạch', 
-      nameEn: 'Heart Health', 
+      nameEn: 'Cardiovascular', 
       icon: Heart,
       color: 'bg-pink-500',
       count: 15
@@ -85,12 +102,39 @@ export const HomePage: React.FC = () => {
 
   const handleCategoryClick = async (categoryName: string) => {
     try {
+      setLoading(true);
       const results = await productService.getProductsByCategory(categoryName);
       setProducts(results);
       setSearchQuery('');
+      setSelectedCategory(categoryName);
+      setShowAllProducts(false);
     } catch (error) {
       console.error('Error loading category products:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleViewAll = async () => {
+    try {
+      setLoading(true);
+      const allProducts = await productService.getAllProducts();
+      setProducts(allProducts);
+      setSearchQuery('');
+      setSelectedCategory(null);
+      setShowAllProducts(true);
+    } catch (error) {
+      console.error('Error loading all products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetToFeatured = () => {
+    setProducts(featuredProducts);
+    setSearchQuery('');
+    setSelectedCategory(null);
+    setShowAllProducts(false);
   };
 
   const handleProductClick = (product: Product) => {
@@ -162,17 +206,71 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Featured Products */}
-      {!searchQuery && (
+      {!searchQuery && !selectedCategory && !showAllProducts && (
         <div className="px-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Sản phẩm nổi bật</h3>
-            <Button variant="ghost" size="sm" className="text-primary">
+            <Button variant="ghost" size="sm" className="text-primary" onClick={handleViewAll}>
               Xem tất cả
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {featuredProducts.slice(0, 4).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onProductClick={handleProductClick}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Category Products */}
+      {selectedCategory && (
+        <div className="px-4 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">
+              {categories.find(cat => cat.nameEn === selectedCategory)?.name} ({products.length})
+            </h3>
+            <Button variant="ghost" size="sm" className="text-primary" onClick={resetToFeatured}>
+              Trở về trang chủ
+            </Button>
+          </div>
+          {products.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onProductClick={handleProductClick}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">
+                Không có sản phẩm nào trong danh mục này
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* All Products */}
+      {showAllProducts && (
+        <div className="px-4 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">
+              Tất cả sản phẩm ({products.length})
+            </h3>
+            <Button variant="ghost" size="sm" className="text-primary" onClick={resetToFeatured}>
+              Trở về trang chủ
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {products.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
