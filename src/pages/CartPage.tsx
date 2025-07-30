@@ -53,7 +53,7 @@ export const CartPage: React.FC = () => {
   };
 
   const total = cartService.getTotal();
-  const hasRequiresPrescription = cart.some(item => item.product.requiresPrescription);
+  const hasRequiresPrescription = cart.some(item => item.product.requires_prescription);
 
   const handlePlaceOrder = async () => {
     if (!customerInfo.name || !customerInfo.phone) {
@@ -243,7 +243,7 @@ export const CartPage: React.FC = () => {
               <div className="space-y-3">
                 {cart.map((item) => (
                   <div key={item.product.id} className="flex justify-between text-sm">
-                    <span>{item.product.nameVi} x{item.quantity}</span>
+                    <span>{item.product.name_vi} x{item.quantity}</span>
                     <span>{formatPrice(item.product.price * item.quantity)}</span>
                   </div>
                 ))}
@@ -292,14 +292,14 @@ export const CartPage: React.FC = () => {
                 <div className="flex gap-3">
                   <img
                     src={item.product.image}
-                    alt={item.product.nameVi}
+                    alt={item.product.name_vi}
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   <div className="flex-1 space-y-2">
                     <div>
-                      <h3 className="font-medium text-sm">{item.product.nameVi}</h3>
-                      <p className="text-xs text-muted-foreground">{item.product.categoryVi}</p>
-                      {item.product.requiresPrescription && (
+                      <h3 className="font-medium text-sm">{item.product.name_vi}</h3>
+                      <p className="text-xs text-muted-foreground">{item.product.category_vi}</p>
+                      {item.product.requires_prescription && (
                         <Badge variant="destructive" className="text-xs mt-1">
                           Cần đơn thuốc
                         </Badge>

@@ -28,7 +28,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    if (product.requiresPrescription) {
+    if (product.requires_prescription) {
       // For prescription products, user must use product detail modal
       onProductClick?.(product);
       return;
@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     cartService.addToCart(product, 1);
     toast({
       title: "Đã thêm vào giỏ hàng",
-      description: `${product.nameVi} đã được thêm vào giỏ hàng`,
+      description: `${product.name_vi} đã được thêm vào giỏ hàng`,
     });
   };
 
@@ -51,10 +51,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="relative aspect-square overflow-hidden">
         <img
           src={product.image}
-          alt={product.nameVi}
+          alt={product.name_vi}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        {product.requiresPrescription && (
+        {product.requires_prescription && (
           <Badge 
             variant="destructive" 
             className="absolute top-2 left-2 flex items-center gap-1"
@@ -63,7 +63,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             Kê đơn
           </Badge>
         )}
-        {!product.inStock && (
+        {!product.in_stock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <Badge variant="secondary">Hết hàng</Badge>
           </div>
@@ -74,10 +74,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="space-y-3">
           <div>
             <h3 className="font-medium text-sm line-clamp-2 mb-1">
-              {product.nameVi}
+              {product.name_vi}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {product.categoryVi}
+              {product.category_vi}
             </p>
           </div>
 
@@ -91,14 +91,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               {formatPrice(product.price)}
             </div>
             
-            {product.inStock && (
+            {product.in_stock && (
               <Button
                 size="sm"
-                variant={product.requiresPrescription ? "outline" : "gradient"}
+                variant={product.requires_prescription ? "outline" : "gradient"}
                 className="h-8 w-8 p-0"
                 onClick={handleAddToCart}
               >
-                {product.requiresPrescription ? (
+                {product.requires_prescription ? (
                   <Pill className="h-4 w-4" />
                 ) : (
                   <Plus className="h-4 w-4" />

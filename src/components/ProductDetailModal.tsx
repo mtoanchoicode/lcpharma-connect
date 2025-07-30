@@ -34,7 +34,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   };
 
   const handleAddToCart = () => {
-    if (product.requiresPrescription && prescriptionImages.length === 0) {
+    if (product.requires_prescription && prescriptionImages.length === 0) {
       toast({
         title: "Cần đơn thuốc",
         description: "Vui lòng tải lên ảnh đơn thuốc trước khi thêm vào giỏ hàng",
@@ -46,7 +46,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     cartService.addToCart(product, quantity);
     toast({
       title: "Đã thêm vào giỏ hàng",
-      description: `${product.nameVi} (${quantity}) đã được thêm vào giỏ hàng`,
+      description: `${product.name_vi} (${quantity}) đã được thêm vào giỏ hàng`,
     });
     
     // Reset and close
@@ -61,7 +61,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg">{product.nameVi}</DialogTitle>
+          <DialogTitle className="text-lg">{product.name_vi}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -69,10 +69,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="relative aspect-square overflow-hidden rounded-lg">
             <img
               src={product.image}
-              alt={product.nameVi}
+              alt={product.name_vi}
               className="w-full h-full object-cover"
             />
-            {product.requiresPrescription && (
+            {product.requires_prescription && (
               <Badge 
                 variant="destructive" 
                 className="absolute top-2 left-2 flex items-center gap-1"
@@ -86,8 +86,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           {/* Product Info */}
           <div className="space-y-3">
             <div>
-              <h3 className="font-semibold text-lg">{product.nameVi}</h3>
-              <p className="text-muted-foreground">{product.categoryVi}</p>
+              <h3 className="font-semibold text-lg">{product.name_vi}</h3>
+              <p className="text-muted-foreground">{product.category_vi}</p>
             </div>
 
             <div className="text-2xl font-bold text-primary">
@@ -98,7 +98,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <div>
               <h4 className="font-medium mb-2">Mô tả sản phẩm</h4>
               <p className="text-sm text-muted-foreground">
-                {product.descriptionVi || "Thông tin chi tiết về sản phẩm sẽ được cập nhật sớm."}
+                {product.description_vi || "Thông tin chi tiết về sản phẩm sẽ được cập nhật sớm."}
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             </Card>
 
             {/* Prescription Upload for Required Medicines */}
-            {product.requiresPrescription && (
+            {product.requires_prescription && (
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-3">
@@ -149,7 +149,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             )}
 
             {/* Quantity Selector */}
-            {product.inStock && (
+            {product.in_stock && (
               <div className="space-y-3">
                 <h4 className="font-medium">Số lượng</h4>
                 <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             )}
 
             {/* Total Price */}
-            {product.inStock && (
+            {product.in_stock && (
               <div className="flex justify-between items-center py-3 border-t">
                 <span className="font-medium">Tổng cộng:</span>
                 <span className="text-xl font-bold text-primary">
@@ -187,7 +187,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <Button variant="outline" className="flex-1" onClick={onClose}>
                 Đóng
               </Button>
-              {product.inStock ? (
+              {product.in_stock ? (
                 <Button 
                   variant="gradient" 
                   className="flex-1"
