@@ -105,7 +105,11 @@ export type Database = {
           customer_email: string
           customer_name: string
           customer_phone: string
+          delivery_address: string | null
+          delivery_method: string | null
           id: string
+          pickup_branch_id: string | null
+          shipping_fee: number | null
           status: string
           status_vi: string
           total: number
@@ -117,7 +121,11 @@ export type Database = {
           customer_email: string
           customer_name: string
           customer_phone: string
+          delivery_address?: string | null
+          delivery_method?: string | null
           id: string
+          pickup_branch_id?: string | null
+          shipping_fee?: number | null
           status?: string
           status_vi?: string
           total: number
@@ -129,13 +137,25 @@ export type Database = {
           customer_email?: string
           customer_name?: string
           customer_phone?: string
+          delivery_address?: string | null
+          delivery_method?: string | null
           id?: string
+          pickup_branch_id?: string | null
+          shipping_fee?: number | null
           status?: string
           status_vi?: string
           total?: number
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_pickup_branch_id_fkey"
+            columns: ["pickup_branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       prescriptions: {
         Row: {

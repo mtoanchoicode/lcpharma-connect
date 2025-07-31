@@ -5,9 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cartService } from '@/services/CartService';
 import { orderService } from '@/services/OrderService';
-import { CartItem, CustomerInfo } from '@/models/Product';
+import { CartItem, CustomerInfo, DeliveryOption } from '@/models/Product';
 import { Minus, Plus, Trash2, ShoppingBag, CheckCircle } from 'lucide-react';
 import { PrescriptionUpload } from '@/components/PrescriptionUpload';
+import { DeliveryOptionsStep } from '@/components/DeliveryOptionsStep';
 import { useToast } from '@/hooks/use-toast';
 
 export const CartPage: React.FC = () => {
@@ -18,8 +19,12 @@ export const CartPage: React.FC = () => {
     email: '',
     address: ''
   });
+  const [deliveryOption, setDeliveryOption] = React.useState<DeliveryOption>({
+    method: 'pickup',
+    shippingFee: 0
+  });
   const [prescriptionImages, setPrescriptionImages] = React.useState<string[]>([]);
-  const [showCheckout, setShowCheckout] = React.useState(false);
+  const [currentStep, setCurrentStep] = React.useState<'cart' | 'delivery' | 'checkout'>('cart');
   const [isPlacingOrder, setIsPlacingOrder] = React.useState(false);
   const [orderSuccess, setOrderSuccess] = React.useState(false);
   const { toast } = useToast();
@@ -53,6 +58,7 @@ export const CartPage: React.FC = () => {
   };
 
   const total = cartService.getTotal();
+  const totalWithShipping = total + (deliveryOption.shippingFee || 0);
   const hasRequiresPrescription = cart.some(item => item.product.requires_prescription);
 
   const handlePlaceOrder = async () => {
@@ -82,6 +88,7 @@ export const CartPage: React.FC = () => {
       
       const order = await orderService.createOrder(
         customerInfo,
+        deliveryOption,
         prescriptionImages.length > 0 ? prescriptionImages : undefined
       );
 
@@ -99,6 +106,8 @@ export const CartPage: React.FC = () => {
         description: `Đơn hàng ${order.id} đã được tạo thành công`,
       });
 
+      setCurrentStep('cart');
+
     } catch (error) {
       toast({
         title: "Lỗi đặt hàng",
@@ -108,6 +117,11 @@ export const CartPage: React.FC = () => {
     } finally {
       setIsPlacingOrder(false);
     }
+  };
+
+  const handleDeliveryOptionSelected = (option: DeliveryOption) => {
+    setDeliveryOption(option);
+    setCurrentStep('checkout');
   };
 
   // Payment Animation Component
@@ -135,6 +149,24 @@ export const CartPage: React.FC = () => {
   }
 
   // Order Success
+  if (currentStep === 'delivery') {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground p-6">
+          <h1 className="text-xl font-bold">Phương thức giao hàng</h1>
+        </div>
+        <div className="p-4">
+          <DeliveryOptionsStep
+            cartTotal={total}
+            onContinue={handleDeliveryOptionSelected}
+            onBack={() => setCurrentStep('cart')}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Order success animation
   if (orderSuccess) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
@@ -152,7 +184,7 @@ export const CartPage: React.FC = () => {
             variant="gradient" 
             onClick={() => {
               setOrderSuccess(false);
-              setShowCheckout(false);
+              setCurrentStep('cart');
             }}
           >
             Tiếp tục mua sắm
@@ -179,7 +211,8 @@ export const CartPage: React.FC = () => {
     );
   }
 
-  if (showCheckout) {
+  // Checkout Step
+  if (currentStep === 'checkout') {
     return (
       <div className="pb-20">
         <div className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground p-6">
@@ -247,9 +280,15 @@ export const CartPage: React.FC = () => {
                     <span>{formatPrice(item.product.price * item.quantity)}</span>
                   </div>
                 ))}
+                <div className="flex justify-between text-sm">
+                  <span>Phí giao hàng:</span>
+                  <span>
+                    {deliveryOption.shippingFee ? formatPrice(deliveryOption.shippingFee) : 'Miễn phí'}
+                  </span>
+                </div>
                 <div className="border-t pt-3 flex justify-between font-semibold">
                   <span>Tổng cộng:</span>
-                  <span className="text-primary">{formatPrice(total)}</span>
+                  <span className="text-primary">{formatPrice(totalWithShipping)}</span>
                 </div>
               </div>
             </CardContent>
@@ -259,7 +298,7 @@ export const CartPage: React.FC = () => {
             <Button 
               variant="outline" 
               className="flex-1"
-              onClick={() => setShowCheckout(false)}
+              onClick={() => setCurrentStep('delivery')}
             >
               Quay lại
             </Button>
@@ -359,10 +398,10 @@ export const CartPage: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span>Phí vận chuyển:</span>
-                <span className="text-success">Miễn phí</span>
+                <span className="text-success">Sẽ tính khi chọn địa chỉ</span>
               </div>
               <div className="border-t pt-3 flex justify-between font-semibold text-lg">
-                <span>Tổng cộng:</span>
+                <span>Tạm tính:</span>
                 <span className="text-primary">{formatPrice(total)}</span>
               </div>
             </div>
@@ -372,9 +411,9 @@ export const CartPage: React.FC = () => {
         <Button 
           variant="gradient" 
           className="w-full mt-4 h-12"
-          onClick={() => setShowCheckout(true)}
+          onClick={() => setCurrentStep('delivery')}
         >
-          Tiến hành đặt hàng
+          Chọn phương thức giao hàng
         </Button>
       </div>
     </div>

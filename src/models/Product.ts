@@ -59,6 +59,10 @@ export interface Order {
   total: number;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed';
   status_vi: string;
+  delivery_method: 'pickup' | 'shipping';
+  pickup_branch_id?: string;
+  shipping_fee: number;
+  delivery_address?: string;
   created_at?: string;
   updated_at?: string;
   items?: OrderItem[];
@@ -82,6 +86,15 @@ export interface CustomerInfo {
   phone: string;
   email: string;
   address: string;
+}
+
+export interface DeliveryOption {
+  method: 'pickup' | 'shipping';
+  branchId?: string;
+  branchName?: string;
+  branchAddress?: string;
+  shippingFee?: number;
+  deliveryAddress?: string;
 }
 
 export interface PrescriptionUpload {

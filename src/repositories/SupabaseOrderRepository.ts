@@ -1,25 +1,31 @@
-import { Order, OrderItem, CustomerInfo, CartItem, PrescriptionUpload } from '../models/Product';
+import { Order, OrderItem, CustomerInfo, CartItem, PrescriptionUpload, DeliveryOption } from '../models/Product';
 import { supabase } from '@/integrations/supabase/client';
 
 export class SupabaseOrderRepository {
-  async createOrder(customerInfo: CustomerInfo, cartItems: CartItem[], total: number, prescriptionImages?: string[]): Promise<Order> {
+  async createOrder(customerInfo: CustomerInfo, cartItems: CartItem[], total: number, deliveryOption: DeliveryOption, prescriptionImages?: string[]): Promise<Order> {
     // Generate order ID
     const orderIdResult = await this.generateOrderId();
     const orderId = orderIdResult;
 
     // Create order
+    const orderData = {
+      id: orderId,
+      customer_name: customerInfo.name,
+      customer_phone: customerInfo.phone,
+      customer_email: customerInfo.email,
+      customer_address: customerInfo.address,
+      total: total + (deliveryOption.shippingFee || 0),
+      status: 'pending',
+      status_vi: 'Đang xử lý',
+      delivery_method: deliveryOption.method,
+      pickup_branch_id: deliveryOption.method === 'pickup' ? deliveryOption.branchId : null,
+      shipping_fee: deliveryOption.shippingFee || 0,
+      delivery_address: deliveryOption.method === 'shipping' ? deliveryOption.deliveryAddress : null
+    };
+
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .insert({
-        id: orderId,
-        customer_name: customerInfo.name,
-        customer_phone: customerInfo.phone,
-        customer_email: customerInfo.email,
-        customer_address: customerInfo.address,
-        total: total,
-        status: 'pending',
-        status_vi: 'Đang xử lý'
-      })
+      .insert(orderData)
       .select()
       .single();
 
@@ -66,6 +72,7 @@ export class SupabaseOrderRepository {
     return {
       ...order,
       status: order.status as Order['status'],
+      delivery_method: order.delivery_method as Order['delivery_method'],
       items: orderItemsData.map((item, index) => ({
         id: `temp-${index}`, // Temporary ID since we don't get it back from insert
         ...item
@@ -96,6 +103,7 @@ export class SupabaseOrderRepository {
     return {
       ...order,
       status: order.status as Order['status'],
+      delivery_method: order.delivery_method as Order['delivery_method'],
       prescriptionImages
     };
   }
@@ -119,6 +127,7 @@ export class SupabaseOrderRepository {
     return orders.map(order => ({
       ...order,
       status: order.status as Order['status'],
+      delivery_method: order.delivery_method as Order['delivery_method'],
       prescriptionImages: order.prescriptions?.map((p: any) => p.image_url) || []
     }));
   }

@@ -1,4 +1,4 @@
-import { Order, CartItem, CustomerInfo } from '../models/Product';
+import { Order, CartItem, CustomerInfo, DeliveryOption } from '../models/Product';
 import { cartService } from './CartService';
 import { SupabaseOrderRepository } from '../repositories/SupabaseOrderRepository';
 
@@ -9,7 +9,7 @@ export class OrderService {
     this.orderRepository = new SupabaseOrderRepository();
   }
 
-  async createOrder(customerInfo: CustomerInfo, prescriptionImages?: string[]): Promise<Order> {
+  async createOrder(customerInfo: CustomerInfo, deliveryOption: DeliveryOption, prescriptionImages?: string[]): Promise<Order> {
     const cartItems = cartService.getCart();
     const total = cartService.getTotal();
 
@@ -17,6 +17,7 @@ export class OrderService {
       customerInfo,
       cartItems,
       total,
+      deliveryOption,
       prescriptionImages
     );
 
