@@ -18,6 +18,7 @@ export const HomePage: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [showAllProducts, setShowAllProducts] = React.useState(false);
+  const [categoryCounts, setCategoryCounts] = React.useState<Record<string, number>>({});
 
   const productService = new ProductService();
 
@@ -36,10 +37,29 @@ export const HomePage: React.FC = () => {
       if (!searchQuery && !selectedCategory && !showAllProducts) {
         setProducts(featured);
       }
+      
+      // Load category counts
+      await loadCategoryCounts();
     } catch (error) {
       console.error('Error loading products:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCategoryCounts = async () => {
+    try {
+      const categoryNames = ['Pain Relief', 'Vitamins', 'Cardiovascular', 'Antibiotics'];
+      const counts: Record<string, number> = {};
+      
+      for (const categoryName of categoryNames) {
+        const products = await productService.getProductsByCategory(categoryName);
+        counts[categoryName] = products.length;
+      }
+      
+      setCategoryCounts(counts);
+    } catch (error) {
+      console.error('Error loading category counts:', error);
     }
   };
 
@@ -193,9 +213,9 @@ export const HomePage: React.FC = () => {
                     </div>
                     <div className="text-center">
                       <div className="font-medium text-xs">{category.name}</div>
-                      <Badge variant="secondary" className="text-xs mt-1">
-                        {category.count}
-                      </Badge>
+                       <Badge variant="secondary" className="text-xs mt-1">
+                         {categoryCounts[category.nameEn] || 0}
+                       </Badge>
                     </div>
                   </Button>
                 );
