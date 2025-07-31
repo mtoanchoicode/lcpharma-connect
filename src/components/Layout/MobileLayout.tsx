@@ -58,12 +58,12 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-20">
         {children || <Outlet />}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="bg-card border-t border-border px-2 py-2 safe-area-pb">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-2 py-2 safe-area-pb z-50">
         <div className="flex items-center justify-around">
           {navigationItems.map((item) => {
             const Icon = item.icon;
