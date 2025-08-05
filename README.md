@@ -1,40 +1,153 @@
-# Welcome to your Lovable project
+# Long Châu PMS - Mobile Pharmacy Management System
+
+A modern mobile-first pharmacy management system built with React, TypeScript, and Capacitor for cross-platform mobile deployment.
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/6b893cbb-51f7-44e0-9049-3755404b1da9
 
-## How can I edit this code?
+## Prerequisites
 
-There are several ways of editing your application.
+Before running this project, make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [npm](https://www.npmjs.com/)
+- For iOS development: [Xcode](https://developer.apple.com/xcode/) (macOS only)
+- For Android development: [Android Studio](https://developer.android.com/studio)
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <YOUR_GIT_URL>
+cd <YOUR_PROJECT_NAME>
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Development Mode
+
+To run the project in development mode with hot reload:
+
+```bash
+npm run dev
+```
+
+This will start the development server at `http://localhost:8080`
+
+### 4. Build for Production
+
+```bash
+npm run build
+```
+
+## Mobile Development Setup
+
+This project uses Capacitor for native mobile app development.
+
+### Initial Mobile Setup
+
+After cloning and installing dependencies, sync the project with mobile platforms:
+
+```bash
+npx cap sync
+```
+
+### Add Mobile Platforms
+
+If you haven't added the mobile platforms yet:
+
+```bash
+# Add iOS platform (macOS only)
+npx cap add ios
+
+# Add Android platform
+npx cap add android
+```
+
+### Update Native Dependencies
+
+When you pull new changes or add new Capacitor plugins:
+
+```bash
+# Update iOS dependencies
+npx cap update ios
+
+# Update Android dependencies
+npx cap update android
+```
+
+### Running on Mobile Devices
+
+#### Android
+
+1. Make sure you have Android Studio installed
+2. Build the project:
+   ```bash
+   npm run build
+   ```
+3. Sync with Capacitor:
+   ```bash
+   npx cap sync android
+   ```
+4. Run on Android device/emulator:
+   ```bash
+   npx cap run android
+   ```
+
+#### iOS
+
+1. Make sure you have Xcode installed (macOS required)
+2. Build the project:
+   ```bash
+   npm run build
+   ```
+3. Sync with Capacitor:
+   ```bash
+   npx cap sync ios
+   ```
+4. Run on iOS device/simulator:
+   ```bash
+   npx cap run ios
+   ```
+
+### Alternative: Open in Native IDE
+
+You can also open the project directly in the native IDEs:
+
+```bash
+# Open in Android Studio
+npx cap open android
+
+# Open in Xcode
+npx cap open ios
+```
+
+## Development Workflow
+
+### For Web Development
+1. Make changes to your code
+2. Test in browser with `npm run dev`
+3. Build with `npm run build`
+
+### For Mobile Development
+1. Make changes to your code
+2. Build the project: `npm run build`
+3. Sync changes: `npx cap sync`
+4. Test on device: `npx cap run android` or `npx cap run ios`
+
+## Other Development Options
 
 **Use Lovable**
 
 Simply visit the [Lovable Project](https://lovable.dev/projects/6b893cbb-51f7-44e0-9049-3755404b1da9) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
 
 **Edit a file directly in GitHub**
 
